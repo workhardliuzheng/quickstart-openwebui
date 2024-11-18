@@ -57,6 +57,9 @@ Artifact:
     ArtifactType: EcsImage
     ArtifactName: openwebui
     Description: openwebui
+    ArtifactProperty:
+      RegionId: ${ImageBuilder.EcsImage.RegionId}
+      ImageId: ${ImageBuilder.EcsImage.SourceImageId}
     SupportRegionIds:
       - cn-beijing
       - cn-hangzhou
@@ -86,9 +89,6 @@ Artifact:
       - eu-west-1
       - me-east-1
       - eu-central-1
-    ArtifactProperty:
-      RegionId: ${ImageBuilder.EcsImage.RegionId}
-      ImageId: ${ImageBuilder.EcsImage.SourceImageId}
 ImageBuilder:
   EcsImage:
     RegionId: ap-southeast-1
