@@ -250,13 +250,13 @@ Resources:
         Ref: ZoneId
       SecurityGroupId:
         Ref: SecurityGroup
-      ImageId: "{{resolve:oos:aliyun/services/ecs/images/linux/centos-latest/centos_7_9_x64}}"
+      ImageId: centos_7
       Password:
         Ref: InstancePassword
       InstanceType:
         Ref: EcsInstanceType
       SystemDiskCategory: cloud_essd
-      SystemDiskSize: 200
+      SystemDiskSize: 40
       InternetMaxBandwidthOut: 5
       IoOptimized: optimized
       MaxAmount: 1
@@ -274,13 +274,7 @@ Resources:
         Fn::Sub:
           - |
             #!/bin/bash
-            # 源代码通过computenest-cli被打包为tar.gz包，并发布为部署物
-            wget '{{ computenest::file::aliyun-computenest_quickstart-openwebui }}' -O aliyun-computenest_quickstart-openwebui.tar.gz > /var/log/download.log
-            tar -zxvf aliyun-computenest_quickstart-openwebui.tar.gz && cd "$(tar -tzf aliyun-computenest_quickstart-openwebui.tar.gz | head -1 | awk -F'/' '{print $1}')"
-            echo "start run command"
-            echo "${AdminPassword}"
-
-            ARGUS_VERSION=3.5.7 /bin/bash -c "$(curl -sS https://cms-agent-${RegionId}.oss-${RegionId}-internal.aliyuncs.com/Argus/agent_install_ecs-1.7.sh)" >> /root/install_cms_agent.log 2>&1
+            docker run -d -p 8080:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama
           - RegionId:
               Ref: ALIYUN::Region
 Outputs:

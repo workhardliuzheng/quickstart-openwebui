@@ -11,24 +11,35 @@ Service:
     SupportBackup: true
   DeployMetadata:
     SupplierDeployMetadata:
-      FileArtifactRelation:
-        '{{ computenest::file::aliyun-computenest_quickstart-openwebui }}':
+      ArtifactRelation:
+        'centos_7' :
           ArtifactId: ${Artifact.Artifact_1.ArtifactId}
           ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
     TemplateConfigs:
       - Name: 单机版
         Url: 'ros_templates/template.yaml'
-        AllowedRegions:
-          - ap-southeast-1
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
     ShortDescription: demo
     Image: 'resources/icons/service_logo.png'
 Artifact:
-  Artifact_1:
-    ArtifactType: File
-    ArtifactName: aliyun-computenest_quickstart-openwebui
+  EcsImage:
+    ArtifactType: EcsImage
+    ArtifactName: openwebui
+    Description: openwebui
     ArtifactProperty:
-      RegionId: cn-hangzhou
-      Url: 'resources/artifact_resources/file/aliyun-computenest_quickstart-openwebui.tar.gz'
+      RegionId: ${ImageBuilder.EcsImage.RegionId}
+      ImageId: ${ImageBuilder.EcsImage.SourceImageId}
+ImageBuilder:
+  EcsImage:
+    RegionId: ap-southeast-1
+    SourceImageId: m-t4nbbockw7ilgo2e2vgu
+    InstanceType: ecs.sgn7i-vws-m2s.xlarge
+    InternetMaxBandwidthOut: 5
+    CommandType: RunShellScript
+    Timeout: 10800
+    Tags: [ ]
+    CommandContent: |-
+      #!/bin/bash
+      docker pull ghcr.io/open-webui/open-webui:ollama
