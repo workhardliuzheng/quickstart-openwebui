@@ -92,7 +92,7 @@ Artifact:
 ImageBuilder:
   EcsImage:
     RegionId: ap-southeast-1
-    SourceImageId: "{{resolve:oos:aliyun/services/computenest/images/aliyun_3_2104_docker_26_gpu}}"
+    SourceImageId: "{{oos:aliyun/services/computenest/images/aliyun_3_2104_docker_26_gpu}}"
     InstanceType: ecs.sgn7i-vws-m2s.xlarge
     InternetMaxBandwidthOut: 5
     CommandType: RunShellScript
