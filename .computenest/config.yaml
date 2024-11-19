@@ -11,41 +11,51 @@ Service:
     SupportBackup: true
   DeployMetadata:
     SupplierDeployMetadata:
-      ArtifactRelation:
-        'centos_7' :
+      FileArtifactRelation:
+        '{{ computenest::file::aliyun-computenest_quickstart-openwebui-docker-compose }}':
           ArtifactId: ${Artifact.Artifact_1.ArtifactId}
           ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
     TemplateConfigs:
       - Name: 单机版
         Url: 'ros_templates/template.yaml'
         AllowedRegions:
-        - ap-southeast-1
-        - cn-hongkong
+          - cn-hangzhou
+          - cn-shanghai
+          - cn-beijing
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
-    ShortDescription: demo
+    ShortDescription: docker compose deploy
     Image: 'resources/icons/service_logo.png'
 Artifact:
-  EcsImage:
-    ArtifactType: EcsImage
-    ArtifactName: openwebui
-    Description: openwebui
+  Artifact_1:
+    ArtifactType: File
+    ArtifactName: aliyun-computenest_quickstart-openwebui-docker-compose
     ArtifactProperty:
-      RegionId: ${ImageBuilder.EcsImage.RegionId}
-      ImageId: ${ImageBuilder.EcsImage.SourceImageId}
-    SupportRegionIds:
-      - ap-southeast-1
-      - cn-hongkong
-ImageBuilder:
-  EcsImage:
-    RegionId: ap-southeast-1
-    SourceImageId: "{{oos:aliyun/services/computenest/images/aliyun_3_2104_docker_26_gpu}}"
-    InstanceType: ecs.sgn7i-vws-m2s.xlarge
-    InternetMaxBandwidthOut: 5
-    CommandType: RunShellScript
-    Timeout: 10800
-    Tags: [ ]
-    CommandContent: |-
-      #!/bin/bash
-      docker pull ghcr.io/open-webui/open-webui:ollama
+      RegionId: cn-hangzhou
+      Url: 'resources/artifact_resources/docker_compose.tar'
+  Artifact_2:
+    ArtifactType: AcrImage
+    ArtifactName: AcrImage-ollama-ollama
+    ArtifactProperty:
+      RepoName: ${AcrImageBuilder.AcrImage_1.RepoName}
+      Tag: ${AcrImageBuilder.AcrImage_1.Tag}
+      RepoType: Public
+  Artifact_3:
+    ArtifactType: AcrImage
+    ArtifactName: AcrImage-open-webui-open-webui
+    ArtifactProperty:
+      RepoName: ${AcrImageBuilder.AcrImage_2.RepoName}
+      Tag: ${AcrImageBuilder.AcrImage_2.Tag}
+      RepoType: Public
+AcrImageBuilder:
+  AcrImage_1:
+    BuildType: DockerRepo
+    DockerRepoUrl: ollama/ollama:latest
+    RepoName: ollama/ollama
+    Tag: latest
+  AcrImage_2:
+    BuildType: DockerRepo
+    DockerRepoUrl: ghcr.io/open-webui/open-webui:ollama
+    RepoName: open-webui/open-webui
+    Tag: ollama
