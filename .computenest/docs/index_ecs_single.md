@@ -12,7 +12,7 @@ _（服务快速上手链接或文档，如果有的话）_
 
 此服务模板构建出的服务的部署架构为单机ecs部署。
 
-<img src="architecture_ecs_single.png" width="600" height="400" align="bottom"/>
+<img src="../../docs/architecture_ecs_single.png" width="600" height="400" align="bottom"/>
 
 ## 计费说明
 通过此服务模板构建服务不产生费用。  
