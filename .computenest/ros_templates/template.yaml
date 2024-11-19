@@ -172,6 +172,7 @@ Parameters:
         - ${VpcOption}
     Default: ''
     AssociationPropertyMetadata:
+      AutoSelectFirst: true
       Visible:
         Condition:
           Fn::Equals:
@@ -189,8 +190,9 @@ Parameters:
         - ExistingVPC
         - ${VpcOption}
     AssociationPropertyMetadata:
-      VpcId: VpcId
-      ZoneId: ZoneId
+      VpcId: ${VpcId}
+      ZoneId: ${ZoneId}
+      AutoSelectFirst: true
       Visible:
         Condition:
           Fn::Equals:
