@@ -272,6 +272,7 @@ Resources:
       CommandContent:
         Fn::Sub:
           - |
+            test -e /root/application || mkdir -p /root/application
             wget '{{ computenest::file::aliyun-computenest_quickstart-openwebui-docker-compose }}' -O /root/application/docker_compose.tar
             tar -xvf /root/application/docker_compose.tar -C /root/application
 
@@ -293,7 +294,7 @@ Resources:
             WantedBy=multi-user.target
             EOF
 
-            
+            systemctl enable openwebui
             systemctl start openwebui
           - RegionId:
               Ref: ALIYUN::Region
