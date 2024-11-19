@@ -127,8 +127,7 @@ Parameters:
       InstanceChargeType: ${PayType}
       Constraints:
         InstanceTypeFamily:
-          - ecs.u1
-          - ecs.e
+          - ecs.gn7i
   InstancePassword:
     NoEcho: true
     Type: String
@@ -250,7 +249,7 @@ Resources:
         Ref: ZoneId
       SecurityGroupId:
         Ref: SecurityGroup
-      ImageId: "{{resolve:oos:aliyun/services/computenest/images/aliyun_3_2104_docker_compose_2_27_compute_nest}}"
+      ImageId: "{{resolve:oos:aliyun/services/computenest/images/aliyun_3_2104_docker_26_gpu}}"
       Password:
         Ref: InstancePassword
       InstanceType:
@@ -276,7 +275,7 @@ Resources:
             wget '{{ computenest::file::aliyun-computenest_quickstart-openwebui-docker-compose }}' -O /root/application/docker_compose.tar
             tar -xvf /root/application/docker_compose.tar -C /root/application
 
-            cat > /etc/systemd/system/docker-compose-app.service <<EOF
+            cat > /etc/systemd/system/openwebui.service <<EOF
             [Unit]
             Description=Docker Compose Application Service
             Requires=docker.service
@@ -295,7 +294,7 @@ Resources:
             EOF
 
             
-            systemctl start docker-compose-app
+            systemctl start openwebui
           - RegionId:
               Ref: ALIYUN::Region
 Outputs:
