@@ -128,6 +128,16 @@ Parameters:
       Constraints:
         InstanceTypeFamily:
           - ecs.gn7i
+          - ecs.gn7e
+          - ecs.gn7s
+          - ecs.gn7
+          - ecs.gn7r
+          - ecs.gn6i
+          - ecs.gn6e
+          - ecs.gn6v
+          - ecs.vgn6i-vws
+          - ecs.vgn7i-vws
+          - ecs.sgn7i-vws
   InstancePassword:
     NoEcho: true
     Type: String
