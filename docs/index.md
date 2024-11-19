@@ -64,5 +64,6 @@ Open WebUI面板在阿里云上的费用主要涉及：
 3. 确认订单完成后同意服务协议并点击**立即创建**
 4. 等待部署完成后就可以开始使用服务，进入服务实例详情点击Address访问。
 ![result.png](result.png)
-
+5.使用服务
+![login.png](login.png)
 
