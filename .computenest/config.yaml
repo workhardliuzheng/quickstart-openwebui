@@ -9,43 +9,58 @@ Service:
           - Stop
           - Restart
     SupportBackup: true
+    
+    ParameterConfigs:
+      - TemplateName: '单机版'
+        Parameters:
+          
+          Default.OLLAMA_TEMPERATURE:
+            Type: Number
+            Default: 0.9
+            Description: OLLAMA温度
+            
+            
+            MaxValue: 1
+            
+            
+            AllowedValues:
+              
+              - 0.9
+              - 0.7
+              - 0.5
+          
+        Metadata:
+           ParameterGroups:
+             - Parameters:
+                 - OLLAMA_TEMPERATURE
+               DefaultValue: |-
+                 
+                 OLLAMA_BASE_URL="http://localhost:11434"
+                 OLLAMA_MODEL="llama2"
+                 OLLAMA_TEMPERATURE=0.7
+               Formatter: env
+               Name: Default
+    
   DeployMetadata:
     SupplierDeployMetadata:
+      SupplierTemplateConfigs:
+        - Name: '单机版'
+          Url: 'ros_templates/template.yaml'
+          AllowedRegions:
+              - cn-hangzhou
+              - cn-shanghai
+              - cn-beijing
       FileArtifactRelation:
-        '{{ computenest::file::aliyun-computenest_quickstart-openwebui-docker-compose }}':
+        '{{ computenest::file::workhardliuzheng_quickstart-openwebui-docker-compose }}':
           ArtifactId: ${Artifact.Artifact_1.ArtifactId}
           ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
     TemplateConfigs:
       - Name: 单机版
         Url: 'ros_templates/template.yaml'
         AllowedRegions:
-          - cn-beijing
           - cn-hangzhou
           - cn-shanghai
-          - ap-southeast-1
-          - cn-qingdao
-          - cn-zhangjiakou
-          - cn-huhehaote
-          - cn-wulanchabu
-          - cn-nanjing
-          - cn-shenzhen
-          - cn-heyuan
-          - cn-guangzhou
-          - cn-fuzhou
-          - cn-wuhan-lr
-          - cn-chengdu
-          - cn-hongkong
-          - ap-northeast-1
-          - ap-northeast-2
-          - ap-southeast-3
-          - ap-southeast-6
-          - ap-southeast-5
-          - ap-southeast-7
-          - us-east-1
-          - us-west-1
-          - eu-west-1
-          - me-east-1
-          - eu-central-1
+          - cn-beijing
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
@@ -54,7 +69,7 @@ Service:
 Artifact:
   Artifact_1:
     ArtifactType: File
-    ArtifactName: aliyun-computenest_quickstart-openwebui-docker-compose
+    ArtifactName: workhardliuzheng_quickstart-openwebui-docker-compose
     ArtifactProperty:
       RegionId: cn-hangzhou
       Url: 'resources/artifact_resources/docker_compose.tar'

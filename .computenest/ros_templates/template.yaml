@@ -127,17 +127,8 @@ Parameters:
       InstanceChargeType: ${PayType}
       Constraints:
         InstanceTypeFamily:
-          - ecs.gn7i
-          - ecs.gn7e
-          - ecs.gn7s
-          - ecs.gn7
-          - ecs.gn7r
-          - ecs.gn6i
-          - ecs.gn6e
-          - ecs.gn6v
-          - ecs.vgn6i-vws
-          - ecs.vgn7i-vws
-          - ecs.sgn7i-vws
+          - ecs.u1
+          - ecs.e
   InstancePassword:
     NoEcho: true
     Type: String
@@ -172,7 +163,6 @@ Parameters:
         - ${VpcOption}
     Default: ''
     AssociationPropertyMetadata:
-      AutoSelectFirst: true
       Visible:
         Condition:
           Fn::Equals:
@@ -190,9 +180,8 @@ Parameters:
         - ExistingVPC
         - ${VpcOption}
     AssociationPropertyMetadata:
-      VpcId: ${VpcId}
-      ZoneId: ${ZoneId}
-      AutoSelectFirst: true
+      VpcId: VpcId
+      ZoneId: ZoneId
       Visible:
         Condition:
           Fn::Equals:
@@ -261,7 +250,7 @@ Resources:
         Ref: ZoneId
       SecurityGroupId:
         Ref: SecurityGroup
-      ImageId: "{{resolve:oos:aliyun/services/computenest/images/aliyun_3_2104_docker_26_gpu}}"
+      ImageId: "{{resolve:oos:aliyun/services/computenest/images/aliyun_3_2104_docker_compose_2_27_compute_nest}}"
       Password:
         Ref: InstancePassword
       InstanceType:
@@ -284,11 +273,10 @@ Resources:
       CommandContent:
         Fn::Sub:
           - |
-            test -e /root/application || mkdir -p /root/application
-            wget '{{ computenest::file::aliyun-computenest_quickstart-openwebui-docker-compose }}' -O /root/application/docker_compose.tar
+            wget '{{ computenest::file::workhardliuzheng_quickstart-openwebui-docker-compose }}' -O /root/application/docker_compose.tar
             tar -xvf /root/application/docker_compose.tar -C /root/application
 
-            cat > /etc/systemd/system/openwebui.service <<EOF
+            cat > /etc/systemd/system/quickstart-openwebui.service <<EOF
             [Unit]
             Description=Docker Compose Application Service
             Requires=docker.service
@@ -306,24 +294,45 @@ Resources:
             WantedBy=multi-user.target
             EOF
 
-            systemctl enable openwebui
-            systemctl start openwebui
+            systemctl enable quickstart-openwebui
+
+            sed -i 's/OLLAMA_TEMPERATURE=[^\n]*/OLLAMA_TEMPERATURE=${OLLAMA_TEMPERATURE}/' /root/application/docker_compose/.env
+            systemctl start quickstart-openwebui
           - RegionId:
               Ref: ALIYUN::Region
-Outputs:
-  ServerAddress:
+  
+  WriteConfigCommand:
+    Type: ALIYUN::ECS::RunCommand
+    Properties:
+      InstanceIds:
+        Fn::GetAtt:
+        - InstanceGroup
+        - InstanceIds
+      Type: RunShellScript
+      Sync: true
+      Timeout: 3600
+      CommandContent:
+        - |
+          cat > /home/ecs-assist-user/service_repo/.env << "EOF"
+ {{ serviceConfigParam }}
+          EOF
+          systemctl stop docker-compose-app
+          systemctl start docker-compose-app
+  
+Outputs: 
+  open-webui_address:
     Description:
-      en: ServerAddress.
-      zh-cn: 访问页面。
+      en: open-webui address.
+      zh-cn: open-webui 访问页面。
     Value:
       Fn::Sub:
         - http://${ServerAddress}:8080
         - ServerAddress:
             Fn::Select:
-            - 0
-            - Fn::GetAtt:
-              - InstanceGroup
-              - PublicIps
+              - 0
+              - Fn::GetAtt:
+                  - InstanceGroup
+                  - PublicIps
 Metadata:
   ALIYUN::ROS::Interface:
     ParameterGroups:
@@ -347,4 +356,9 @@ Metadata:
           - VSwitchCidrBlock
         Label:
           default: 可用区配置
+      - Parameters:
+          - OLLAMA_TEMPERATURE
+        Label:
+          en: Software Configuration
+          zh-cn: 软件配置
       
