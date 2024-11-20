@@ -10,37 +10,6 @@ Service:
           - Restart
     SupportBackup: true
     
-    ParameterConfigs:
-      - TemplateName: '单机版'
-        Parameters:
-          
-          Default.OLLAMA_TEMPERATURE:
-            Type: Number
-            Default: 0.9
-            Description: 训练温度
-            
-            
-            MaxValue: 1
-            
-            
-            AllowedValues:
-              
-              - 0.9
-              - 0.7
-              - 0.5
-          
-        Metadata:
-           ParameterGroups:
-             - Parameters:
-                 - OLLAMA_TEMPERATURE
-               DefaultValue: |-
-                 
-                 OLLAMA_BASE_URL="http://localhost:11434"
-                 OLLAMA_MODEL="llama2"
-                 OLLAMA_TEMPERATURE=0.7
-               Formatter: env
-               Name: Default
-    
   DeployMetadata:
     SupplierDeployMetadata:
       SupplierTemplateConfigs:

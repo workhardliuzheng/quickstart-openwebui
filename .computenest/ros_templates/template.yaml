@@ -296,28 +296,10 @@ Resources:
 
             systemctl enable quickstart-openwebui
 
-            sed -i 's/OLLAMA_TEMPERATURE=[^\n]*/OLLAMA_TEMPERATURE=${OLLAMA_TEMPERATURE}/' /root/application/docker_compose/.env
+            
             systemctl start quickstart-openwebui
           - RegionId:
               Ref: ALIYUN::Region
-  
-  WriteConfigCommand:
-    Type: ALIYUN::ECS::RunCommand
-    Properties:
-      InstanceIds:
-        Fn::GetAtt:
-        - InstanceGroup
-        - InstanceIds
-      Type: RunShellScript
-      Sync: true
-      Timeout: 3600
-      CommandContent:
-        - |
-          cat > /home/ecs-assist-user/service_repo/.env << "EOF"
-          {{ serviceConfigParam }}
-          EOF
-          systemctl stop docker-compose-app
-          systemctl start docker-compose-app
   
 Outputs: 
   open-webui_address:
@@ -356,9 +338,4 @@ Metadata:
           - VSwitchCidrBlock
         Label:
           default: 可用区配置
-      - Parameters:
-          - OLLAMA_TEMPERATURE
-        Label:
-          en: Software Configuration
-          zh-cn: 软件配置
       
