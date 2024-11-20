@@ -296,7 +296,7 @@ Resources:
 
             systemctl enable quickstart-openwebui
 
-            echo '推理温度=${推理温度}' >> /root/application/docker_compose/.env
+            sed -i 's/OLLAMA_TEMPERATURE=[^\n]*/OLLAMA_TEMPERATURE=${OLLAMA_TEMPERATURE}/' /root/application/docker_compose/.env
             systemctl start quickstart-openwebui
           - RegionId:
               Ref: ALIYUN::Region
@@ -357,7 +357,7 @@ Metadata:
         Label:
           default: 可用区配置
       - Parameters:
-          - 推理温度
+          - OLLAMA_TEMPERATURE
         Label:
           en: Software Configuration
           zh-cn: 软件配置
